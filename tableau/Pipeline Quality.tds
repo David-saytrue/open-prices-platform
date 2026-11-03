@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<datasource caption='Open Prices - Pipeline Quality' version='18.1'>
+  <connection class='greenplum' dbname='open_prices' server='127.0.0.1' port='55433' username='open_prices_tableau'>
+    <relation name='Pipeline Quality' table='[bi].[pipeline_quality]' type='table'/>
+  </connection>
+</datasource>

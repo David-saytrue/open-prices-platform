@@ -126,3 +126,28 @@ runtime directories were renamed to recovery backups while Docker was stopped;
 no volumes were reset. After startup the official Model Runner disable command
 succeeded, and `EnableInference` was verified false. A future full Docker
 shutdown/restart has not yet been exercised to establish a permanent fix.
+
+## Tableau source preparation: 2026-11-03
+
+The user chose Desktop instead of Public. Desktop installation and activation
+are not complete. The official Free Edition form was opened for the user to
+provide registration details; no personal details were submitted by the agent.
+Direct shell retrieval returned HTTP 403. The winget package was an older 2024
+release and was not installed. No installer was found in Downloads at the check.
+
+`sql/003_tableau_views.sql` prepared three BI sources. The sixth actual Greenplum
+integration test verifies that joins for store/product labels preserve mart grain
+and that the latest available product name does not multiply rows.
+All six Greenplum tests passed locally. The three `.tds` connection templates
+passed XML validation; this does not establish Desktop compatibility.
+
+A real connection as `open_prices_tableau` verified:
+
+- `transaction_read_only`: on.
+- Direct usage permission on schema `mart`: false.
+- `bi.store_price_trends`: 21,979 rows.
+- `bi.product_price_comparison`: 307,460 rows.
+- `bi.pipeline_quality`: 1 row.
+
+No Tableau workbook, live Desktop connection or screenshot of a completed
+dashboard has been produced. These remain pending actual installation.

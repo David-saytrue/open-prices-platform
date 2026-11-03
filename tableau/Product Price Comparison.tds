@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<datasource caption='Open Prices - Product Price Comparison' version='18.1'>
+  <connection class='greenplum' dbname='open_prices' server='127.0.0.1' port='55433' username='open_prices_tableau'>
+    <relation name='Product Price Comparison' table='[bi].[product_price_comparison]' type='table'/>
+  </connection>
+</datasource>

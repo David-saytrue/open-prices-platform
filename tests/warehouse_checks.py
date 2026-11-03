@@ -18,6 +18,7 @@ from psycopg2 import sql
 from open_prices_platform.curated import artifact_inventory, recipe_id
 from open_prices_platform.ingest import CaptureError, capture
 from open_prices_platform.warehouse import connect, initialize, load_curated
+from open_prices_platform.tableau import setup_views
 from test_ingest import price, source
 
 FACT_SCHEMA = pa.schema([
@@ -179,6 +180,22 @@ class WarehouseChecks(unittest.TestCase):
         load_curated(output, raw, self.database)
         self.assertEqual(self.query("SELECT median_observed_price, comparable_store_price_gap FROM mart.daily_product_prices"),
                          [(Decimal("99999999999999.000002"), Decimal("0.000002"))])
+
+    def test_tableau_views_preserve_mart_grain(self):
+        output, raw = self.fixture([
+            fact(1, product_name="Older name"),
+            fact(2, "3", product_name="Latest name", source_updated_at=datetime(2026, 10, 3, tzinfo=timezone.utc)),
+            fact(3, "4", location_id=None, location_match_status="MISSING"),
+        ])
+        load_curated(output, raw, self.database)
+        setup_views(self.database)
+        self.assertEqual(self.query("SELECT COUNT(*) FROM bi.store_price_trends"),
+                         self.query("SELECT COUNT(*) FROM mart.daily_store_prices"))
+        self.assertEqual(self.query("SELECT COUNT(*) FROM bi.product_price_comparison"),
+                         self.query("SELECT COUNT(*) FROM mart.daily_product_prices"))
+        self.assertEqual(self.query("SELECT SUM(observation_count) FROM bi.store_price_trends"), [(Decimal(3),)])
+        self.assertEqual(self.query("SELECT product_label FROM bi.product_price_comparison"), [("Latest name",)])
+        self.assertEqual(self.query("SELECT accepted_rows, quarantine_rate FROM bi.pipeline_quality"), [(3, Decimal(0))])
 
 
 if __name__ == "__main__":

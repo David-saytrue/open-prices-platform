@@ -48,6 +48,16 @@ as open work. Never substitute a PostgreSQL run for a claimed Greenplum test.
 - [ ] Verify DAG import, retry behavior, stored-snapshot replay and a full run.
 - [ ] Add the operations runbook and CI checks; commit and push.
 
+## Milestone 5: Tableau Desktop BI layer
+
+- [x] Prepare separate BI views for store, product and pipeline-quality grains.
+- [x] Verify a dedicated reader can query the BI views without mart schema access.
+- [x] Prepare XML-validated, unverified Desktop connection templates.
+- [ ] Download and install official Desktop after user-provided registration.
+- [ ] Verify the actual Desktop driver and Greenplum connection.
+- [ ] Create and visually verify the English local dashboards.
+- [ ] Document the actual installed edition's publication/sharing capabilities.
+
 ## Review focus
 
 Mixed source export times, missing product metadata, legitimate repeated prices,

@@ -96,6 +96,15 @@ and unit, plus source quality metrics. Updates are staged, checked and published
 in one transaction. Read [the warehouse runbook](docs/warehouse.md) for replay,
 rollback, comparison limitations, test commands and image provenance.
 
+## Tableau Desktop preparation
+
+The user selected Tableau Desktop as the local BI tool. Three grain-safe BI
+views and a dedicated read-only reader are prepared. Connection templates and
+the installation/connection status are in [tableau/README.md](tableau/README.md).
+Desktop installation, connector verification and dashboard authoring are still
+pending the official installer download and registration. No live Desktop
+connection or completed dashboard is claimed yet.
+
 ## Data and language
 
 Open Prices publishes compressed JSONL exports and a Parquet dataset. The
