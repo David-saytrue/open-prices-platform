@@ -5,8 +5,9 @@
 Environment: Windows, CPython 3.13.9. No external Python dependencies.
 All 18 offline regression tests passed locally. A real second capture returned
 `created: false` and reused the same verified snapshot without changing it.
-Offline tests are configured in GitHub Actions on Windows/Linux with Python 3.11/3.13.
-The CI matrix is a declared check, not a claim of success before its runs finish.
+All four GitHub Actions jobs passed on Windows/Linux with Python 3.11/3.13 for
+commit `0f6fe60`. Each job ran all 18 tests and the CLI help check.
+[Verified CI run](https://github.com/David-saytrue/open-prices-platform/actions/runs/41626769497).
 
 Live official bulk exports were captured on 2026-11-03. The completed local
 snapshot ID is
