@@ -160,3 +160,17 @@ XML. All three templates now set `inline='true'`. The corrected Pipeline Quality
 template was reopened through Desktop's File Open dialog and reached the
 Greenplum Sign In dialog with `open_prices_tableau` prefilled. Authentication and
 data retrieval remain pending; this is not yet a verified live BI connection.
+
+### Windows ODBC prerequisite: 2026-11-03
+
+The user submitted the Sign In dialog, after which Desktop reported `A73B8869`
+because no PostgreSQL/Greenplum ODBC driver was registered. Installed the official
+PostgreSQL `psqlODBC 17.00.0010` x64 MSI after Windows administrator approval.
+The installer completed with exit code 0 and registered PostgreSQL Unicode(x64).
+A host-side .NET ODBC query through that driver returned user
+`open_prices_tableau`, `transaction_read_only=on` and one pipeline-quality row.
+The MSI SHA-256 was
+`e36628657d5f91968058a560085abd23647d75c7c51ab60f3329ead8c7b640df`.
+The installer is not Authenticode-signed and was downloaded directly over HTTPS
+from `ftp.postgresql.org`. Installers and local logs remain excluded from Git.
+This establishes driver connectivity, not yet a successful Desktop worksheet.

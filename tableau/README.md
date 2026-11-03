@@ -45,8 +45,15 @@ Opening a template can display a Sign In dialog even with trust authentication.
 Leave Password empty and click **OK**. Reaching this dialog alone does not verify
 driver compatibility or successful data retrieval.
 
-Tableau may require a connector driver. Use the driver link displayed by the
-installed Tableau version. Do not expose the demo database to the public network.
+The Windows installation required an additional 64-bit PostgreSQL ODBC driver.
+Without it, Desktop returned `A73B8869` (ODBC Driver Manager: data source name
+not found). The official `psqlODBC 17.00.0010` x64 MSI was installed locally;
+Windows administrator approval was required. Restart Desktop after installation.
+The installed `PostgreSQL Unicode(x64)` driver successfully read
+`bi.pipeline_quality` as `open_prices_tableau` with `transaction_read_only=on`.
+This verifies host ODBC connectivity; Desktop data retrieval still needs validation.
+Use [official PostgreSQL downloads](https://www.postgresql.org/ftp/odbc/releases/REL-17_00_0010/)
+or the driver link displayed by Tableau. Do not expose the demo database to the public network.
 Compatibility of this exact Desktop version/driver with Greenplum 7.0.0 build dev
 remains unverified until an actual Desktop connection succeeds.
 
