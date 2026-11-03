@@ -53,10 +53,12 @@ as open work. Never substitute a PostgreSQL run for a claimed Greenplum test.
 - [x] Prepare separate BI views for store, product and pipeline-quality grains.
 - [x] Verify a dedicated reader can query the BI views without mart schema access.
 - [x] Prepare XML-validated, unverified Desktop connection templates.
-- [ ] Download and install official Desktop after user-provided registration.
-- [ ] Verify the actual Desktop driver and Greenplum connection.
-- [ ] Create and visually verify the English local dashboards.
-- [ ] Document the actual installed edition's publication/sharing capabilities.
+- [x] Download and install official Desktop after user-provided registration.
+- [x] Verify the actual Desktop driver and Greenplum connection for Pipeline Quality.
+- [x] Create, save and visually verify the English local Pipeline Health dashboard.
+- [ ] Validate the store/product connections and create Market Overview and Product Comparison.
+- [ ] Add publication/source-capture freshness cards to Pipeline Health.
+- [x] Document the actual installed edition's publication/sharing capabilities.
 
 ## Review focus
 

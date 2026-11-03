@@ -174,3 +174,22 @@ The MSI SHA-256 was
 The installer is not Authenticode-signed and was downloaded directly over HTTPS
 from `ftp.postgresql.org`. Installers and local logs remain excluded from Git.
 This establishes driver connectivity, not yet a successful Desktop worksheet.
+
+### Live Desktop dashboard: 2026-11-03
+
+After the user completed the empty-password Sign In dialog, Tableau Desktop
+2026.3 loaded the Pipeline Quality fields and executed live Greenplum queries.
+The UI rendered 330,358 accepted rows and 9,680 quarantined rows. The detailed
+worksheet displayed all nine BI numeric measures, excluding Tableau's generated
+record count. Quarantine and unknown-unit rates were explicitly formatted as
+percentages with two decimal places: 2.85% and 96.85% respectively.
+
+Saved `artifacts/tableau/Pipeline Health.twb` locally, with worksheets Accepted
+Rows, Quarantined and Quality Details, and dashboard Pipeline Health. Verified
+the actual dashboard in Desktop presentation mode. Its explanatory text states
+the denominators, distinguishes price observations from sales and attributes
+Open Prices / Open Food Facts. XML readback confirmed three worksheets, the
+named dashboard, the live Greenplum reader connection, display aliases and no
+extract. The workbook and its aggregate thumbnails remain ignored local files.
+Store/product Desktop sources, freshness cards and Airflow orchestration remain
+open work. No Tableau publication or workbook distribution was performed.

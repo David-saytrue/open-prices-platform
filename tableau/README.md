@@ -14,8 +14,8 @@ The three `.tds` files are hand-authored connection templates containing no
 passwords or embedded records. Their required datasource attribute `inline` is
 set explicitly. The corrected Pipeline Quality template opened in Desktop 2026.3
 and reached the Greenplum Sign In dialog without the previous XML loading error.
-Successful authentication, data retrieval and the other two templates still need
-Desktop validation.
+The Pipeline Quality source has now authenticated and returned data in Desktop.
+The other two templates still need Desktop validation.
 
 ## Prepare Greenplum sources
 
@@ -51,11 +51,33 @@ not found). The official `psqlODBC 17.00.0010` x64 MSI was installed locally;
 Windows administrator approval was required. Restart Desktop after installation.
 The installed `PostgreSQL Unicode(x64)` driver successfully read
 `bi.pipeline_quality` as `open_prices_tableau` with `transaction_read_only=on`.
-This verifies host ODBC connectivity; Desktop data retrieval still needs validation.
+Desktop also successfully queried the same view and rendered a local dashboard.
 Use [official PostgreSQL downloads](https://www.postgresql.org/ftp/odbc/releases/REL-17_00_0010/)
 or the driver link displayed by Tableau. Do not expose the demo database to the public network.
-Compatibility of this exact Desktop version/driver with Greenplum 7.0.0 build dev
-remains unverified until an actual Desktop connection succeeds.
+Desktop 2026.3, this ODBC driver and Greenplum 7.0.0 build dev were verified together
+for the pipeline-quality source. Store and product sources remain unverified in Desktop.
+
+## Verified local workbook
+
+The local file `artifacts/tableau/Pipeline Health.twb` was authored and saved in
+Desktop on 2026-11-03. It uses a live Greenplum connection, with three worksheets
+(`Accepted Rows`, `Quarantined`, `Quality Details`) and one `Pipeline Health`
+dashboard. It contains no extract and remains excluded from Git. The dashboard
+was visually checked in Desktop presentation mode.
+
+- Accepted rows: 330,358; quarantined rows: 9,680; source rows: 340,038.
+- Quarantine rate: 2.85%, with source rows as denominator.
+- Unknown-unit rows: 319,938; unknown-unit rate: 96.85%, with accepted rows as denominator.
+- Location rows: 7,781; missing location references: 2; unmatched references: 0.
+
+Both rates use Percentage with two decimal places. The quality worksheet selects
+the nine explicit BI measures and omits Tableau's generated record-count measure.
+Display aliases shorten long field names without changing their formulas.
+An English text block explains denominators, the unit-comparability limitation
+and the Open Prices / Open Food Facts source. To view it locally, start the
+project Greenplum service, open the workbook and use the reader login above.
+The checked workbook is local work; it has not been published to Tableau Cloud,
+Server or Public, or distributed as a packaged workbook.
 
 ## Sources and dashboard outline
 
@@ -71,14 +93,15 @@ product and store marts to quality totals.
 3. `bi.pipeline_quality`: current publication only. Use its source/accepted/
    quarantine counts for whole-pipeline KPI cards, unaffected by retail filters.
 
-Proposed local dashboard pages, not yet authored in Desktop:
+Dashboard page status:
 
-- **Market Overview:** observed price trends at the stated grain, filtered by one
+- **Market Overview (planned):** observed price trends at the stated grain, filtered by one
   currency and one unit. Counts represent submissions, not purchases or demand.
-- **Product Comparison:** one selected product, currency and unit; known-unit
+- **Product Comparison (planned):** one selected product, currency and unit; known-unit
   cross-store gaps and descriptive observed prices.
-- **Pipeline Health:** accepted/quarantine counts, unknown-unit coverage and
-  last source-capture/publication times.
+- **Pipeline Health (local v1 complete):** accepted/quarantine counts, unknown-unit
+  coverage and location-reference checks. Source-capture/publication timestamps
+  are available in the BI view; freshness cards remain planned.
 
 All authored titles, controls and documentation are English. Original product and
 place names remain source literals and may be multilingual or missing.
