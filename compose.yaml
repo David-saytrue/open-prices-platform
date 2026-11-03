@@ -1,0 +1,23 @@
+name: open-prices-platform
+
+services:
+  spark:
+    image: apache/spark:4.0.1-python3@sha256:acfe7e06e95dd13aa32ee03c464766900d52fba15f58e421f8e1213ec041bb94
+    user: "0:0"
+    working_dir: /workspace
+    environment:
+      PYTHONPATH: /workspace
+      SPARK_LOCAL_IP: 127.0.0.1
+    volumes:
+      - .:/workspace
+    entrypoint:
+      - /opt/spark/bin/spark-submit
+      - --master
+      - local[2]
+      - --driver-memory
+      - 1g
+      - --conf
+      - spark.ui.enabled=false
+      - --conf
+      - spark.sql.shuffle.partitions=4
+    # This is a one-shot local job, not a standalone Spark cluster.

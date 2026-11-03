@@ -13,13 +13,14 @@ not sales, shopper conversion or market-wide popularity.
 - Design and implementation milestones are documented.
 - Source ingestion, immutable snapshots, checksum verification and source profiling
   are implemented using the Python standard library.
-- Spark, Airflow and Greenplum are planned; their execution is not yet verified.
+- Spark curation writes typed facts, reason-coded quarantine and location Parquet.
+- Airflow and Greenplum remain planned; their execution is not yet verified.
 
 See [the design](docs/design.md) and [the implementation plan](docs/implementation-plan.md).
 
 ## Run the first milestone
 
-Python 3.11+ is required. Docker, an API key and third-party Python packages are
+Python 3.10+ is required. Docker, an API key and third-party Python packages are
 not needed for source capture. From the repository root:
 
 ```powershell
@@ -44,6 +45,37 @@ ignored `.capture-*` directory; it must never be treated as a completed snapshot
 
 The profile reports aggregate anomalies and coverage. It does not clean or
 silently remove source records. See [recorded validation](docs/validation.md).
+
+## Run Spark curation
+
+Start Docker Desktop, then run this command from the repository root, replacing
+the snapshot placeholder with the path printed by `fetch`:
+
+```powershell
+docker compose run --rm spark jobs/curate_prices.py --snapshot data/lake/raw/open_prices/<snapshot-id> --lake-root data/lake
+docker compose run --rm spark tests/spark_checks.py
+```
+
+Compose uses an official Apache Spark 4.0.1 image pinned by SHA-256, with Python
+3.10.12 and Java 17.0.16. It runs one local Spark driver with two worker threads,
+not a distributed cluster. The initial image download is much larger than the
+source files. The local job runs as root to write bind-mounted development files;
+this is not a production container deployment.
+
+The job produces `accepted_prices/`, `quarantine_prices/`, `locations/` and a
+completion `manifest.json` under `data/lake/curated/open_prices/<curated-id>/`.
+Verify a stored output without Spark using
+`python -m open_prices_platform verify-curated data/lake/curated/open_prices/<curated-id>`.
+Both facts and quarantine reconcile to the raw row count. Parquet files are
+read back to verify row counts and types before publication. File checksums
+protect subsequent reuse. Raw and curated data remain excluded from Git.
+
+The output identity includes the source snapshot, transformation code, Spark
+version and validation date. The default validation date is the source capture's
+UTC date, making replay independent of the wall clock. `--as-of YYYY-MM-DD`
+explicitly changes that date and creates a separate output identity.
+
+See [the curation contract](docs/curation.md) for rejection and comparison rules.
 
 ## Data and language
 

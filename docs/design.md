@@ -34,14 +34,17 @@ do not guarantee one transactionally consistent cross-entity snapshot.
 
 ## Processing and warehouse
 
-The planned PySpark job reads only completed, verified manifests. It normalizes
+The PySpark job reads only completed, verified manifests. It normalizes
 decimal prices, dates and units, and preserves source IDs and update timestamps.
 Rows with invalid business values enter a quarantine output. Reconcile accepted
 and rejected counts to raw input. Do not silently discard legitimate equal-price
 observations or infer stockouts from absence.
 
-Fact grain is one source price observation (`price.id`). A later price record
-version replaces the same ID only by documented source update ordering.
+Fact grain is one source price observation (`price.id`). Within a source snapshot,
+the latest parseable source update for an ID is the candidate. Older/repeated rows
+go to quarantine, and conflicting payloads at the same update time stop publication.
+An invalid latest correction is quarantined; it must not resurrect an older value.
+Every source snapshot is processed separately; no cross-snapshot CDC is claimed.
 Dimensions include store/location and product references. Missing product
 enrichment stays unknown. Join dimensions at unique keys; count missing
 references rather than dropping unmatched facts.
@@ -67,10 +70,10 @@ requesting a past DAG date must not imply reconstruction of unavailable exports.
 
 ## Constraints and open work
 
-- Python 3.11+ for ingestion; standard library only for the first milestone.
+- Python 3.10+ for ingestion; standard library only for the first milestone.
 - No credentials required to read the official bulk exports.
 - Initial source has hundreds of thousands of observations, not billions.
 - English field names do not establish English product descriptions.
-- Native Windows Java is old; run Spark in a verified supported Linux runtime.
+- Native Windows Java is old; Spark runs in a digest-pinned official Linux image.
 - Greenplum installation/source and version compatibility need verification.
-- Container startup is currently blocked by a Docker Desktop inference socket error.
+- Docker Desktop runtime sockets were recovered; Engine 28.5.1 responded.

@@ -23,13 +23,13 @@ as open work. Never substitute a PostgreSQL run for a claimed Greenplum test.
 
 ## Milestone 2: Spark curated layer
 
-- [ ] Select and pin a supported Spark/Python/Java runtime.
-- [ ] Implement a PySpark job with explicit source schema and decimal/date checks.
-- [ ] Write accepted Parquet, quarantine Parquet and reconciliation metrics to
+- [x] Select and pin a supported Spark/Python/Java runtime.
+- [x] Implement a PySpark job with explicit source schema and decimal/date checks.
+- [x] Write accepted Parquet, quarantine Parquet and reconciliation metrics to
   an isolated candidate directory; publish its manifest only after validation.
-- [ ] Test duplicate IDs, corrections, invalid price/date/unit, NULL references,
+- [x] Test duplicate IDs, corrections, invalid price/date/unit, NULL references,
   equal source versions with conflicting payloads, and interrupted publication.
-- [ ] Run small synthetic fixtures and the real snapshot; commit and push.
+- [x] Run small synthetic fixtures and the real snapshot; commit and push.
 
 ## Milestone 3: Greenplum warehouse and marts
 

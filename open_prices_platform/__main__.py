@@ -8,6 +8,7 @@ from datetime import date
 from pathlib import Path
 
 from .ingest import CaptureError, capture, verify_snapshot
+from .curated import verify_curated
 from .profile import profile_snapshot
 
 
@@ -16,7 +17,7 @@ def main() -> int:
     commands = parser.add_subparsers(dest="command", required=True)
     fetch = commands.add_parser("fetch", help="Capture both official bulk exports")
     fetch.add_argument("--lake-root", type=Path, default=Path("data/lake"))
-    for name in ("verify", "profile"):
+    for name in ("verify", "profile", "verify-curated"):
         subcommand = commands.add_parser(name)
         subcommand.add_argument("snapshot", type=Path)
         if name == "profile":
@@ -31,6 +32,10 @@ def main() -> int:
             manifest = verify_snapshot(args.snapshot)
             result = {"snapshot_id": manifest["snapshot_id"], "verified": True,
                       "rows": {entry["entity"]: entry["rows"] for entry in manifest["files"]}}
+        elif args.command == "verify-curated":
+            manifest = verify_curated(args.snapshot)
+            result = {"curated_id": manifest["curated_id"], "verified": True,
+                      "metrics": manifest["metrics"]}
         else:
             result = profile_snapshot(args.snapshot, as_of=args.as_of)
     except (CaptureError, OSError, EOFError, urllib.error.URLError, ValueError, KeyError) as exc:

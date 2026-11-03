@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "open-prices-platform"
 version = "0.1.0"
 description = "Reproducible ingestion of official Open Prices bulk exports"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 dependencies = []
 
 [project.scripts]

@@ -38,8 +38,8 @@ Original rows remain in ignored local storage. This document contains aggregates
 
 - No automated language classification or product enrichment has run.
 - No retailer sales, stock counts, conversion or population coverage is available.
-- Spark, Greenplum and the Airflow DAG have not yet been implemented or tested.
-- This validates the capture stage, not the complete target pipeline.
+- Greenplum and the Airflow DAG have not yet been implemented or tested.
+- Spark curation is validated below; the full warehouse pipeline is not complete.
 
 ## Local Docker recovery
 
@@ -51,3 +51,37 @@ secrets database were deleted. The Secrets Engine directory contained only the
 socket. After restart, Docker Desktop reported running and Docker Engine 28.5.1
 responded. The inference-disable command had failed before recovery; do not
 assume Model Runner was disabled.
+
+## Spark curation milestone: 2026-11-03
+
+Verified runtime: Apache Spark 4.0.1, Python 3.10.12 and Java 17.0.16, using
+`apache/spark:4.0.1-python3` pinned to digest
+`sha256:acfe7e06e95dd13aa32ee03c464766900d52fba15f58e421f8e1213ec041bb94`.
+This is a local two-thread Spark job in Docker, not a multi-node benchmark.
+
+All 23 offline tests passed locally on CPython 3.13.9. The original 18 ingestion
+tests also passed on the container's CPython 3.10.12. Five Spark integration tests
+passed in the pinned container. These cover corrections, equal-version conflicts,
+duplicate IDs, invalid dates/prices/units, NULL references, empty output schemas,
+Parquet readback, failed publication, idempotent reuse and artifact tampering.
+GitHub Actions now includes the same Spark checks; check its run before claiming
+remote success for this milestone.
+
+The real pinned raw snapshot was processed with the final transformation code.
+Curated output ID:
+`137fec51830e4b7116490e3a95cff274cf349101b6dc71f3213f722855f4763d`.
+The standard-library `verify-curated` CLI also verified this container-produced
+artifact on the Windows host.
+
+- Input price rows: 340,038.
+- Accepted price observations: 330,358.
+- Quarantined rows: 9,680. Accepted plus quarantined exactly equals input.
+- Locations: 7,781; accepted fact IDs are unique.
+- Rejection reasons: 185 invalid dates, 170 invalid/missing currency codes and
+  9,495 source-marked duplicates. Reasons overlap; do not sum them as row counts.
+- Accepted observations with UNKNOWN price units: 319,938.
+- Missing location references: 2; unmatched non-null references: zero.
+
+All three Parquet tables were read back and checked before publication.
+The real replay returned `created: false` and reused the same verified output.
+Downloaded/curated rows and container logs remain excluded from Git.
