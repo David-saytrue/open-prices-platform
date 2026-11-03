@@ -150,4 +150,13 @@ A real connection as `open_prices_tableau` verified:
 - `bi.pipeline_quality`: 1 row.
 
 No Tableau workbook, live Desktop connection or screenshot of a completed
-dashboard has been produced. These remain pending actual installation.
+dashboard has been produced at this preparation milestone.
+
+### Desktop template correction: 2026-11-03
+
+The user subsequently installed Tableau Desktop 2026.3. Opening Pipeline Quality
+revealed a missing required `inline` datasource attribute in the hand-authored
+XML. All three templates now set `inline='true'`. The corrected Pipeline Quality
+template was reopened through Desktop's File Open dialog and reached the
+Greenplum Sign In dialog with `open_prices_tableau` prefilled. Authentication and
+data retrieval remain pending; this is not yet a verified live BI connection.

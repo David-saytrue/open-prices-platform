@@ -7,15 +7,15 @@ trial or account has been created by this project.
 
 ## Installation status
 
-Tableau Desktop is **not installed or activated yet**. The official 2026.3 download
-page requires a registration form. The user must supply their own details and
-download the official installer. Command-line attempts to retrieve the installer
-returned HTTP 403; the old 2024 winget package was not installed.
+The user installed Tableau Desktop 2026.3. The running application was verified
+locally on 2026-11-03. No paid license or trial was provisioned by the project.
 
 The three `.tds` files are hand-authored connection templates containing no
-passwords or embedded records. They are XML-validated, but have **not yet been
-opened or validated in Tableau Desktop**. If the installed connector requires
-additional metadata, create the connection using the UI settings below instead.
+passwords or embedded records. Their required datasource attribute `inline` is
+set explicitly. The corrected Pipeline Quality template opened in Desktop 2026.3
+and reached the Greenplum Sign In dialog without the previous XML loading error.
+Successful authentication, data retrieval and the other two templates still need
+Desktop validation.
 
 ## Prepare Greenplum sources
 
@@ -40,6 +40,10 @@ Use the Pivotal Greenplum Database connector:
 - Database: `open_prices`
 - Username: `open_prices_tableau`
 - Password: leave blank for this local demo's trust authentication.
+
+Opening a template can display a Sign In dialog even with trust authentication.
+Leave Password empty and click **OK**. Reaching this dialog alone does not verify
+driver compatibility or successful data retrieval.
 
 Tableau may require a connector driver. Use the driver link displayed by the
 installed Tableau version. Do not expose the demo database to the public network.
