@@ -13,4 +13,3 @@
 - A missing observation does not prove a stockout or product deletion.
 - Price comparisons must preserve currency, unit and observation grain.
 - Run `python -m unittest discover -s tests -v` before committing behavior changes.
-

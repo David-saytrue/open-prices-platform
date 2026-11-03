@@ -11,14 +11,14 @@ as open work. Never substitute a PostgreSQL run for a claimed Greenplum test.
 
 ## Milestone 1: Source capture and audit
 
-- [ ] Implement `open_prices_platform/ingest.py`: `capture(lake_root, ...)`
+- [x] Implement `open_prices_platform/ingest.py`: `capture(lake_root, ...)`
   streams two bounded official exports, validates them and publishes a manifest.
-- [ ] Implement `open_prices_platform/profile.py`: `profile_snapshot(path)`
+- [x] Implement `open_prices_platform/profile.py`: `profile_snapshot(path)`
   verifies stored bytes and reports aggregate quality without printing raw rows.
-- [ ] Add a module CLI for `fetch`, `verify` and `profile`.
-- [ ] Test interrupted capture, malformed/oversized gzip JSONL, missing keys,
+- [x] Add a module CLI for `fetch`, `verify` and `profile`.
+- [x] Test interrupted capture, malformed/oversized gzip JSONL, missing keys,
   checksum tampering, source duplicates and an identical-file rerun.
-- [ ] Capture real exports, verify them, run profiling, and record aggregate results.
+- [x] Capture real exports, verify them, run profiling, and record aggregate results.
 - [ ] Run tests and the English/secret/diff review, then commit and push.
 
 ## Milestone 2: Spark curated layer

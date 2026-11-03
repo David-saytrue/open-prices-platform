@@ -74,4 +74,3 @@ requesting a past DAG date must not imply reconstruction of unavailable exports.
 - Native Windows Java is old; run Spark in a verified supported Linux runtime.
 - Greenplum installation/source and version compatibility need verification.
 - Container startup is currently blocked by a Docker Desktop inference socket error.
-
