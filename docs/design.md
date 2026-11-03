@@ -49,8 +49,8 @@ Dimensions include store/location and product references. Missing product
 enrichment stays unknown. Join dimensions at unique keys; count missing
 references rather than dropping unmatched facts.
 
-Greenplum receives a complete candidate dataset in staging. Build and validate
-SQL marts before transactional publication. Planned mart grains:
+Greenplum receives a complete candidate dataset in transaction-local staging.
+SQL marts are built and validated before transactional publication. Mart grains:
 
 - `daily_store_prices`: date, store, currency and price unit.
 - `daily_product_prices`: date, product code, currency and price unit.
@@ -75,5 +75,6 @@ requesting a past DAG date must not imply reconstruction of unavailable exports.
 - Initial source has hundreds of thousands of observations, not billions.
 - English field names do not establish English product descriptions.
 - Native Windows Java is old; Spark runs in a digest-pinned official Linux image.
-- Greenplum installation/source and version compatibility need verification.
+- Greenplum 7.0.0 build dev is verified in a pinned community local-only image.
+- Airflow orchestration remains to be implemented and verified.
 - Docker Desktop runtime sockets were recovered; Engine 28.5.1 responded.

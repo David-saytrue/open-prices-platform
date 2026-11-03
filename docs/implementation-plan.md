@@ -33,12 +33,12 @@ as open work. Never substitute a PostgreSQL run for a claimed Greenplum test.
 
 ## Milestone 3: Greenplum warehouse and marts
 
-- [ ] Verify an obtainable Greenplum distribution and supported deployment.
-- [ ] Create staging, facts, dimensions and explicitly grained mart SQL.
-- [ ] Implement staged loading and transactional promotion, serialized per target.
-- [ ] Test join fanout, currency/unit separation, NULLs, replay and rollback
+- [x] Verify an obtainable Greenplum distribution and documented local deployment.
+- [x] Create staging, facts, dimensions and explicitly grained mart SQL.
+- [x] Implement staged loading and transactional promotion, serialized per target.
+- [x] Test join fanout, currency/unit separation, NULLs, replay and rollback
   against actual Greenplum. Record untested integrations honestly.
-- [ ] Commit and push the independently working warehouse milestone.
+- [x] Commit and push the independently working warehouse milestone.
 
 ## Milestone 4: Airflow orchestration
 

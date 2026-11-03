@@ -38,8 +38,8 @@ Original rows remain in ignored local storage. This document contains aggregates
 
 - No automated language classification or product enrichment has run.
 - No retailer sales, stock counts, conversion or population coverage is available.
-- Greenplum and the Airflow DAG have not yet been implemented or tested.
-- Spark curation is validated below; the full warehouse pipeline is not complete.
+- The Airflow DAG has not yet been implemented or tested.
+- Spark and Greenplum are validated below; scheduled orchestration is not complete.
 
 ## Local Docker recovery
 
@@ -85,3 +85,44 @@ artifact on the Windows host.
 All three Parquet tables were read back and checked before publication.
 The real replay returned `created: false` and reused the same verified output.
 Downloaded/curated rows and container logs remain excluded from Git.
+
+## Greenplum warehouse milestone: 2026-11-03
+
+Verified server: `PostgreSQL 12.12 (Greenplum Database 7.0.0 build dev)`, with one
+coordinator and two up primary segments. This is a pinned community local image,
+not PostgreSQL-only testing or a supported commercial distribution.
+
+All 27 dependency-free tests passed on the Windows host. Five integration tests
+passed against actual Greenplum using new, randomly named synthetic databases.
+Those tests cover independent currency/unit groups, median/spread grain, NULL
+references, literal `\N`, quoted multiline text, duplicate dimension rejection,
+older-source protection, idempotent replay, concurrent publication and rollback
+after an injected failure following mart construction. The failing transaction
+left both prior fact values and the publication pointer unchanged; a subsequent
+valid correction succeeded. Temporary test databases were removed by the suite.
+
+A precision regression test uses values near `99999999999999.000001`. Actual
+Greenplum reported `double precision` for `PERCENTILE_CONT` on NUMERIC input.
+The implementation instead ranks NUMERIC inputs and averages the middle rows,
+preserving the expected median `99999999999999.000002` and gap `0.000002`.
+
+The real source and curated snapshots from prior milestones were loaded into
+the new project database `open_prices` and reconciled:
+
+- `dwh.price_observation`: 330,358 rows.
+- `dwh.location`: 7,781 rows.
+- `mart.daily_store_prices`: 21,979 rows.
+- `mart.daily_product_prices`: 307,460 rows.
+- `mart.source_quality`: one publication row.
+
+The schema/mart/code recipe load ID is
+`4c872f6786f71806f9bbca07c0bace2ded821c3db5bfa611bf813218d0d484b2`.
+The final real replay returned `created: false` with unchanged fact and mart counts.
+GitHub Actions now includes actual Greenplum integration checks. Remote CI success
+must be checked on the published commit before reporting it.
+
+Docker Desktop's stale runtime sockets recurred before this milestone. Only
+runtime directories were renamed to recovery backups while Docker was stopped;
+no volumes were reset. After startup the official Model Runner disable command
+succeeded, and `EnableInference` was verified false. A future full Docker
+shutdown/restart has not yet been exercised to establish a permanent fix.

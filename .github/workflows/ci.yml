@@ -33,3 +33,18 @@ jobs:
         run: docker compose run --rm spark tests/spark_checks.py
       - name: Check ingestion on the container's Python 3.10
         run: docker compose run --rm --entrypoint python3 spark -m unittest discover -s tests -v
+
+  greenplum-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start actual Greenplum and build the loader
+        run: |
+          docker compose up -d --wait greenplum
+          docker compose build warehouse
+      - name: Check transactions and marts in isolated synthetic databases
+        run: docker compose run --rm -e OPEN_PRICES_TEST_DB=1 --entrypoint python warehouse tests/warehouse_checks.py
+      - name: Report database startup errors
+        if: failure()
+        run: docker compose logs --tail 60 greenplum

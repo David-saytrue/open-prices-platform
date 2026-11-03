@@ -21,3 +21,38 @@ services:
       - --conf
       - spark.sql.shuffle.partitions=4
     # This is a one-shot local job, not a standalone Spark cluster.
+
+  greenplum:
+    image: andruche/greenplum:7@sha256:616f234725d424ed7ad951a6f4f4cff11055d73aa767758ff7a9049ed2a968a9
+    hostname: localhost
+    shm_size: 256m
+    volumes:
+      - greenplum-data:/data
+    ports:
+      - "127.0.0.1:55433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "su - gpadmin -c 'psql -d postgres -Atc \"SELECT 1\"' | grep -qx 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 24
+
+  warehouse:
+    build:
+      context: .
+      dockerfile: docker/warehouse.Dockerfile
+    working_dir: /workspace
+    environment:
+      PYTHONPATH: /workspace
+      PGHOST: greenplum
+      PGPORT: "5432"
+      PGUSER: gpadmin
+      PGDATABASE: open_prices
+    volumes:
+      - .:/workspace:ro
+    depends_on:
+      greenplum:
+        condition: service_healthy
+    entrypoint: ["python", "-m", "open_prices_platform.warehouse"]
+
+volumes:
+  greenplum-data:

@@ -14,7 +14,8 @@ not sales, shopper conversion or market-wide popularity.
 - Source ingestion, immutable snapshots, checksum verification and source profiling
   are implemented using the Python standard library.
 - Spark curation writes typed facts, reason-coded quarantine and location Parquet.
-- Airflow and Greenplum remain planned; their execution is not yet verified.
+- Greenplum loads verified Parquet and builds transactional SQL marts.
+- The Airflow DAG remains planned; its execution is not yet verified.
 
 See [the design](docs/design.md) and [the implementation plan](docs/implementation-plan.md).
 
@@ -76,6 +77,24 @@ UTC date, making replay independent of the wall clock. `--as-of YYYY-MM-DD`
 explicitly changes that date and creates a separate output identity.
 
 See [the curation contract](docs/curation.md) for rejection and comparison rules.
+
+## Run the Greenplum warehouse
+
+```powershell
+docker compose up -d --wait greenplum
+docker compose build warehouse
+docker compose run --rm warehouse init
+docker compose run --rm warehouse load --curated data/lake/curated/open_prices/<curated-id> --source-snapshot data/lake/raw/open_prices/<source-id>
+```
+
+This uses actual Greenplum 7.0.0 build dev with two primary segments in a pinned
+community image. It is a local learning environment, not a supported production
+deployment. The dedicated database is `open_prices` at `127.0.0.1:55433`.
+
+The SQL marts expose daily observed-price distributions by store/product, currency
+and unit, plus source quality metrics. Updates are staged, checked and published
+in one transaction. Read [the warehouse runbook](docs/warehouse.md) for replay,
+rollback, comparison limitations, test commands and image provenance.
 
 ## Data and language
 
